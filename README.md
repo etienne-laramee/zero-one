@@ -1,9 +1,7 @@
 # Python and Math learning project
 # Usage
 ## Dev
-docker compose up -d
-## Prod
-docker compose -f docker-compose.prod.yml up -d
+docker compose up --build --force-recreate
 
 # Roadmap
 ## 🎯 Recommended Tech Stack:
