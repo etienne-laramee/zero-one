@@ -17,12 +17,11 @@ def fact():
 	return 'factorial {} = {}'.format(n, _factorial)
 
 @app.get('/combination')
-def expectedValues():
+def combination():
 	n = int(request.args.get('n'))
 	r = int(request.args.get('r'))
-	print('n {}, r {}'.format(n, r))
-	combination = factorial(n)//(factorial(r)*factorial(n-r))
-	return "Combination {}, {} = {}".format(n, r, combination)
+	_combination = factorial(n)//(factorial(r)*factorial(n-r))
+	return 'Combination {}, {} = {}'.format(n, r, _combination)
 
 if __name__ == '__main__':
 	app.run(host='0.0.0.0', port=5000, debug=True, use_reloader=True)
