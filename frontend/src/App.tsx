@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Latex from 'react-katex';
+import { InlineMath } from 'react-katex';
 import 'katex/dist/katex.min.css';
 import './App.css';
 
@@ -49,7 +49,7 @@ function AnswerPane({ n, r, data }: { n: number, r: number, data: CombinationRes
       {data ? (
         <>
           <div>Result: {data.combination}</div>
-          <div>Formula: </div>
+          <div>Formula: <InlineMath math={`_{${n}}C_{${r}} = \\frac{${n}!}{${r}!(${n}-${r})!}`} /></div>
         </>
       ): (
           <div>Enter values for n and r</div>
