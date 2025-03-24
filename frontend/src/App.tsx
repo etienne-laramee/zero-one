@@ -1,70 +1,22 @@
 import React, { useState } from 'react';
-import { InlineMath } from 'react-katex';
-import 'katex/dist/katex.min.css';
+import { CombinationFormula } from './components/combinations/Combinations';
+import { AnswerPane } from './components/answer/AnswerPane';
+import { CombinationResponse } from './components/types/Types';
+import { combinationService } from './components/services/Services';
+import { INPUT_N, INPUT_R } from './components/constants/InputFields';
+
 import './App.css';
+import 'katex/dist/katex.min.css';
 
-
-const INPUT_N = "inputN";
-const INPUT_R = "inputR";
-const BACKEND_URL = (import.meta.env.VITE_BACKEND_URL + ":" + import.meta.env.VITE_BACKEND_PORT);
-
-interface CombinationResponse {
-  combination: number;
-  formula: string;
-}
-
-function CombinationPane({ n, r, handleChange }: { n: number, r: number, handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void }) {
-  return (
-    <div>
-      <CombinationFormula n={n} r={r} handleChange={handleChange}/>
-    </div>
-  );
-}
-
-function CombinationFormula({ n, r, handleChange }: { n: number, r: number, handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void }) {
-  return (
-    <div>
-      <CombinationN n={n} handleChange={handleChange} />
-      C
-      <CombinationR n={n}  r={r} handleChange={handleChange} />
-    </div>
-  );
-}
-
-function CombinationN({ n, handleChange }: {n: number, handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void}) {
-  return (
-    <input min="0" name={INPUT_N} type="number" value={n} onChange={handleChange} />
-  );
-}
-
-function CombinationR({ n, r, handleChange }: {n:number, r: number, handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void}) {
-  return (
-    <input min="0" max={n} name={INPUT_R} type="number" value={r} onChange={handleChange} />
-  );
-}
-
-function AnswerPane({ n, r, data }: { n: number, r: number, data: CombinationResponse | null }) {
-  return (
-    <div>
-      {data ? (
-        <>
-          <div>Result: {data.combination}</div>
-          <div>Formula: <InlineMath math={`_{${n}}C_{${r}} = \\frac{${n}!}{${r}!(${n}-${r})!}`} /></div>
-        </>
-      ): (
-          <div>Enter values for n and r</div>
-      )}
-    </div>
-  );
-}
 
 function App() {
   const [n, setN] = useState(0);
   const [r, setR] = useState(0);
   const [data, setData] = useState<CombinationResponse | null>(null);
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const { name, valueAsNumber: value } = e.target;
+  async function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const name = e.target.name;
+    const value = e.target.value ? e.target.valueAsNumber : 0;
     let newN = n;
     let newR = r;
 
@@ -73,29 +25,21 @@ function App() {
       setN(newN);
       setR(prev => Math.min(prev, newN));
     } else if (name == INPUT_R) {
-      newR = value > newN? newN : value;
+      newR = value > newN ? newN : value;
       setR(newR);
     }
 
-    const xhr = new XMLHttpRequest();
-    const params = ("n=" + newN + "&r=" + newR);
-    xhr.open('GET', BACKEND_URL + "/combination?" + params);
-    xhr.onload = function() {
-      console.log('Response status:', xhr.status);
-      console.log('Response text:', xhr.responseText);
-
-      if (xhr.status === 200) {
-        const response = JSON.parse(xhr.responseText);
-        setData(response);
-      }
+    try {
+      const result = await combinationService.getCombination(newN, newR);
+      setData(result);
+    } catch (error) {
+      // Handle error
     }
-
-    xhr.send();
   }
 
   return (
     <>
-      <CombinationPane n={n} r={r} handleChange={handleChange} />
+      <CombinationFormula n={n} r={r} handleChange={handleChange} />
       <AnswerPane n={n} r={r} data={data} />
     </>
   )
