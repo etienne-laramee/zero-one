@@ -1,8 +1,10 @@
-FROM node:23-alpine
+FROM node:20
 
 WORKDIR /app
 
-COPY package.json package-lock.json* ./
+RUN rm -rf node_modules package-lock.json
+
+COPY package.json ./
 
 RUN npm install
 

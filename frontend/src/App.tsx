@@ -4,8 +4,6 @@ import { AnswerPane } from './components/answer/AnswerPane';
 import { CombinationResponse } from './components/types/Types';
 import { combinationService } from './components/services/Services';
 import { INPUT_N, INPUT_R } from './components/constants/InputFields';
-
-import './App.css';
 import 'katex/dist/katex.min.css';
 
 
@@ -38,10 +36,10 @@ function App() {
   }
 
   return (
-    <>
+    <div className="mx-auto max-w-sm rounded-xl bg-white shadow-lg outline outline-black/5">
       <CombinationFormula n={n} r={r} handleChange={handleChange} />
       <AnswerPane n={n} r={r} data={data} />
-    </>
+    </div>
   )
 }
 
