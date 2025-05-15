@@ -113,10 +113,12 @@ export function CombinationR({ n, r, handleChange }: InputProps) {
 export function CombinationFormula({ n, r, handleChange }: InputProps) {
   return (
     <div className="flex items-end justify-center gap-2 p-20">
+        <span className="text-2xl font-semibold text-gray-500"><InlineMath math={`n`} /></span>
       <div className="relative">
         <CombinationN n={n} handleChange={handleChange} />
       </div>
       <span className="text-8xl font-semibold text-gray-500"><InlineMath math={`C`} /></span>
+        <span className="text-2xl font-semibold text-gray-500"><InlineMath math={`r`} /></span>
       <div className="relative">
         <CombinationR n={n} r={r} handleChange={handleChange} />
       </div>

@@ -45,5 +45,23 @@ def permutation():
         f"_{{{n}}}P_{{{r}}} = \\frac{{{factorial(n)}}}{{{factorial(n-r)}}}",
         f"_{{{n}}}P_{{{r}}} = {_permutation}"])
 
+@app.get('/amdahl')
+def amdahl():
+    p = float(request.args.get('p'))
+    s = float(request.args.get('s'))
+
+    # TODO Handle division by 0
+
+    _maximumPossibleImprovement = (1 / ((1 - p) + (p / s)))
+    app.logger.info("Amdahl's law calculated: S(max)=%d", _maximumPossibleImprovement)
+    return jsonify(
+        result=_maximumPossibleImprovement,
+        formula=[
+            f"S_{{max}}=\\frac{{1}}{{(1 - {p}) + \\frac{{{p}}}{{{s}}}}}",
+            f"S_{{max}}=\\frac{{1}}{{{1-p}+{p/s}}}",
+            f"S_{{max}}=\\frac{{1}}{{{(1-p)+(p/s)}}}",
+            f"S_{{max}}={1/((1-p)+(p/s))}"
+        ])
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True, use_reloader=True)
